@@ -427,9 +427,31 @@ MATCH (n {owned:true})-[:AdminTo|MemberOf*1..]->(c:Computer) RETURN n.name, c.na
 MATCH (c:Computer)-[:HasSession]->(u {owned:true}) RETURN c.name, u.name
 ```
 
+### 14 Credentail Enumeration
+```cypher
+MATCH (u:User) WHERE u.description IS NOT NULL AND u.description <> '' RETURN u.name, u.description ORDER BY u.name
+```
+More targeted — filter for password-like keywords:
+```cypher
+MATCH (u:User) WHERE u.description IS NOT NULL AND u.description =~ '(?i).*(pass|pwd|cred|secret|key|login|temp|initial|default|p@ss|123|!).*' RETURN u.name, u.description
+```
+
+Also check computer descriptions:
+```cypher
+MATCH (c:Computer) WHERE c.description IS NOT NULL AND c.description =~ '(?i).*(pass|pwd|cred|secret|key).*' RETURN c.name, c.description
+```
+
+```
+ldapsearch "(objectClass=user)" --attributes samaccountname,description
+```
+
+```
+PatchlessinlinePowershell "Get-DomainUser -LDAPFilter '(description=*)' | Where-Object { $_.description -match 'pass|pwd|cred|secret|key|temp|initial' } | Select-Object samaccountname, description" --amsi --etw --pipe desc1
+```
+
 ---
 
-## 14. Quick Reference — BloodHound Built-in Analysis Queries
+## 15. Quick Reference — BloodHound Built-in Analysis Queries
 
 Use the **Analysis** tab in BloodHound GUI for these pre-built queries:
 
@@ -448,7 +470,7 @@ Use the **Analysis** tab in BloodHound GUI for these pre-built queries:
 
 ---
 
-## 15. Recommended Enumeration Workflow
+## 16. Recommended Enumeration Workflow
 
 1. **Import SharpHound Data** → Upload ZIP to BloodHound
 2. **Mark Owned Principals** → Set compromised accounts as owned
