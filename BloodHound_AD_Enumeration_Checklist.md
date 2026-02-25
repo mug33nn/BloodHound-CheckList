@@ -466,5 +466,4 @@ Use the **Analysis** tab in BloodHound GUI for these pre-built queries:
 
 ---
 
-*Generated for MUFG Red Team ASV Operations*
 *Reference: https://queries.specterops.io/*
